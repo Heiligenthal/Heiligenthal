@@ -62,8 +62,7 @@ class tableCodeToTable {
         let tableAndEndStates = this.tableCodeToNumberRepresentation(tableCode, reverter(CODE_BASE, ASCII_ABS))
                                         .toBase(2)
                                         .split(10);
-        this.numberRepresentationTableStates = this.ensureEvenLength(tableAndEndStates[0])
-                                        .toBase(TRANSITION_COUNT);
+        this.numberRepresentationTableStates = this.ensureEvenLength(tableAndEndStates[0].toBase(TRANSITION_COUNT));
         this.numberRepresentationEndStates = tableAndEndStates[1];
     }
     private ensureEvenLength(numberRepresentationTableStates: baseXNumber): baseXNumber {
@@ -145,8 +144,6 @@ class baseXNumber {
         baseXNumber.forEach((v:number, i:number) => {
             base10Number += v*Math.pow(base, len-i);
         });
-        //let base10Return: number[] = base10Number.toString(10).split('').map((v: string)=>Number.parseInt(v, 10));
-    
         return base10Number;
     }
     private static base10ToBase = (base10Number: number, base: number): number[] => {
