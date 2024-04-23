@@ -1,4 +1,4 @@
-import { fillTableWithArray, getEndStates, getTable } from "./TableUtils";
+import { endstateFiller, fillTableWithArray, getEndStates, getTable } from "./TableUtils";
 
 const TRANSITION_COUNT: number = 11; 
 const CODE_BASE: number = 94;
@@ -9,7 +9,10 @@ export function generateCode(): String {
 }
 export function generateTable(tableCode: String): number[][] {
     let revertedTable = new tableCodeToTable(tableCode);
-    fillTableWithArray(revertedTable.returnTableStates());
+    let tableStates = revertedTable.returnTableStates();
+    fillTableWithArray(tableStates);
+    let endStates = revertedTable.returnEndStates();
+    endstateFiller(endStates);
     return revertedTable.returnTableStates();
 }
 function converter(base: number, asciiAbs: number): Function {
@@ -64,6 +67,7 @@ class tableCodeToTable {
                                         .split(10);
         this.numberRepresentationTableStates = this.ensureEvenLength(tableAndEndStates[0].toBase(TRANSITION_COUNT));
         this.numberRepresentationEndStates = tableAndEndStates[1];
+       
     }
     private ensureEvenLength(numberRepresentationTableStates: baseXNumber): baseXNumber {
         if (numberRepresentationTableStates.baseNumber.length % 2 !== 0) {
@@ -138,34 +142,35 @@ class baseXNumber {
         });
         return ret;
     }
-    private static toBase10 = (baseXNumber: number[], base: number): number => {
-        let base10Number: number = 0;
+    private static toBase10 = (baseXNumber: number[], base: number): bigint => {
+        let base10Number: bigint = 0n;
         let len = baseXNumber.length-1;
         baseXNumber.forEach((v:number, i:number) => {
-            base10Number += v*Math.pow(base, len-i);
+            base10Number = base10Number + BigInt(v)*BigInt(base)**BigInt((len-i));
         });
         return base10Number;
     }
-    private static base10ToBase = (base10Number: number, base: number): number[] => {
+    private static base10ToBase = (base10Number: bigint, base: number): number[] => {
 
+        let bigIntBase = BigInt(base);
         if(base10Number <= 0) return [0];
-        let r: number[] = [];
+        let r: bigint[] = [];
         let going: boolean = true;
         let i: number = 0;
         while(going){
-            r[i] = base10Number%base;
-            base10Number = Math.floor(base10Number/base);
-            if(base10Number == 0) going = false;
+            r[i] = base10Number%bigIntBase;
+            base10Number = base10Number/bigIntBase;
+            if(base10Number == 0n) going = false;
             i++;
         }
         r.reverse();
-        return r;
+        return r.map((v: bigint) => Number(v));
     }
     private static fromBaseXToBaseY = (baseXNumber: number[], baseX: number, baseY:number):number[] => {
         return this.base10ToBase(this.toBase10(baseXNumber, baseX), baseY);
     }
     split = (lastElementLeft: number): [baseXNumber, baseXNumber] => {
-        return [new baseXNumber(2, this.baseNumber.slice(0, -lastElementLeft)), new baseXNumber(2, this.baseNumber.slice(-lastElementLeft, this.baseNumber.length-1))]
+        return [new baseXNumber(2, this.baseNumber.slice(0, -lastElementLeft)), new baseXNumber(2, this.baseNumber.slice(-lastElementLeft, this.baseNumber.length))]
     }
 
 }
