@@ -5,12 +5,12 @@ Der zur verfügung gestellte Code liest den Automaten in Form einer Deltatabelle
 welche von anderen Nutzern der Anwendung verwendet werden kann, um den selben DEA auf ihrem Rechner ansehen zu können.
 
 Die bereitgestellten Schnittstellen für anderen Komponenten umfassen die Funktionen generateCode() und generateTable()
-Die verwendeten Schnittstellen umfassen die Funktionen fillTableWithArray(), getEndStates() und getTable() aus dem Komponent TableUtils
+Die verwendeten Schnittstellen umfassen die Funktionen fillTableWithArray(), endstateFiller(), getEndStates() und getTable() aus dem Komponent TableUtils
 
 generateCode() verwendet die Funktionen getTable() und getEndStates() um die Beschriebene Zeichenkette zu generieren.
 Diese wird als String zurückgegeben.
 
-generateTable() akzeptiert einen eben solchen String und erstellt daraufhin mit fillTableWithArray() die Deltatabelle und somit den Automaten
+generateTable() akzeptiert einen eben solchen String und erstellt daraufhin mit fillTableWithArray() die Deltatabelle, mit endstateFiller() die Endzustände und somit den Automaten.
 
 Die Deltatabelle wird als Array aus number Arrays exportiert und importiert. Die Darstellungsweise ist hierbei einheitlich folgendermaßen:
 Der Index des number Arrays stellt den Namen des Zustandes dar. 
@@ -36,8 +36,6 @@ Darstellung: [1]
 
 
 Wenn dieser Code verwendet werden möchte, ist es nötig, die Funktionen der Komponente TableUtils bereitzustellen.
-Eine Funktion zur setzung der Endzustände existierte zum Zeitpunkt der Erstellung des Repositoriums noch nicht,
-demnach ist auch das Setzen der Endzustände mit der Funktion generateTable() nicht möglich.
 
 Autor dieser Komponente ist Alexander Heiligenthal
 
